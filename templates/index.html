@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Word Prediction</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Next Word Prediction Demo</h1>
+
+    <div>
+        <button class="toggle-button" id="nextWordButton">Dự đoán từ</button>
+        <button class="toggle-button" id="nextPhraseButton">Dự đoán câu</button>
+    </div>
+    <br>
+
+    <form id="predictionForm">
+        <div class="myDiv">
+            <h2>Nhập text vào đây:</h2>
+            <textarea id="inputText" rows="3" cols="50" style="font-size: 18pt" required></textarea>
+        </div>
+        <br>
+    </form>
+
+    <div id="result">
+        <h2>Kết quả dự đoán:</h2>
+        <div class="predictions-container">
+            <div class="prediction-column" id="predictionTF">
+                <div>
+                    <strong>Transformer:</strong><br>
+                </div>
+            </div>
+            <div class="prediction-column" id="predictionLSTM">
+                <div>
+                    <strong>LSTM:</strong><br>
+                </div>
+            </div>
+            <div class="prediction-column" id="predictionGRU">
+                <div>
+                    <strong>GRU:</strong><br>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loadingMessage" style="display: none;">Đang tải dự đoán...</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
