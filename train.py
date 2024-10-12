@@ -72,25 +72,21 @@ modelLSTM.add(Embedding(total_words, 64, input_length=max_sequence_len-1))
 modelLSTM.add(LSTM(256))
 modelLSTM.add(Dropout(0.5))
 modelLSTM.add(Dense(total_words, activation='softmax'))
-
 modelLSTM.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-modelLSTM.summary()
 
-#modelLSTM.fit(X, y, epochs=100, verbose=2)
-
-#modelLSTM.save('modelLSTM.h5')
+modelLSTM.fit(X, y, epochs=100, verbose=2)
+modelLSTM.save('modelLSTM.h5')
 
 modelGRU = Sequential()
 modelGRU.add(Embedding(total_words, 64, input_length=max_sequence_len-1))
 modelGRU.add(GRU(256))
 modelGRU.add(Dropout(0.5))
 modelGRU.add(Dense(total_words, activation='softmax'))
-
 modelGRU.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-modelGRU.summary()
 
-#modelGRU.fit(X, y, epochs=100, verbose=2)
-#modelGRU.save('modelGRU.h5')
+
+modelGRU.fit(X, y, epochs=100, verbose=2)
+modelGRU.save('modelGRU.h5')
 
 class TransformerBlock(Model):
     def __init__(self, embed_dim, num_heads, ff_dim, rate=0.1, trainable=True, **kwargs):

@@ -31,7 +31,7 @@ y = input_sequences[:, -1]
 
 y = np.array(tf.keras.utils.to_categorical(y, num_classes=total_words))
 
-with open('tokenizer.pkl', 'wb') as file:
+with open('tokenizerv2.pkl', 'wb') as file:
     pickle.dump(tokenizer, file)
 
 modelLSTM = Sequential()
@@ -42,7 +42,7 @@ modelLSTM.add(Dense(total_words, activation='softmax'))
 modelLSTM.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 modelLSTM.fit(X, y, epochs=100, verbose=1)
-modelLSTM.save('modelLSTM.h5')
+modelLSTM.save('modelLSTMv2.h5')
 
 modelGRU = Sequential()
 modelGRU.add(Embedding(total_words, 64, input_length=max_sequence_len-1))
@@ -52,7 +52,7 @@ modelGRU.add(Dense(total_words, activation='softmax'))
 modelGRU.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 modelGRU.fit(X, y, epochs=100, verbose=1)
-modelGRU.save('modelGRU.h5')
+modelGRU.save('modelGRUv2.h5')
 
 class TransformerBlock(Model):
     def __init__(self, embed_dim, num_heads, ff_dim, rate=0.1, trainable=True, **kwargs):
@@ -129,4 +129,4 @@ modelTF = build_model(total_words, max_sequence_len, embed_dim, num_heads, ff_di
 modelTF.summary()
 
 modelTF.fit(X, y, epochs=500, verbose=1)
-modelTF.save('modelTF.h5')
+modelTF.save('modelTFv2.h5')
