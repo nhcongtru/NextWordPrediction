@@ -6,6 +6,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, LSTM, Dense, MultiHeadAttention, LayerNormalization, Dropout, GRU, BatchNormalization
 from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import GlobalAveragePooling1D
 
 with open('datasetViet.txt', 'r', encoding='utf-8') as file:
@@ -37,21 +39,27 @@ with open('tokenizerv2.pkl', 'wb') as file:
 modelLSTM = Sequential()
 modelLSTM.add(Embedding(total_words, 64, input_length=max_sequence_len-1))
 modelLSTM.add(LSTM(256))
-modelLSTM.add(Dropout(0.2))
+modelLSTM.add(BatchNormalization())
+modelLSTM.add(Dropout(0.3))
 modelLSTM.add(Dense(total_words, activation='softmax'))
-modelLSTM.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+optimizer = Adam(learning_rate=0.0001, clipvalue=1.0)
+modelLSTM.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-modelLSTM.fit(X, y, epochs=100, verbose=1)
+early_stopping = EarlyStopping(monitor='loss', patience=5, restore_best_weights=True)
+modelLSTM.fit(X, y, epochs=100, verbose=1, callbacks=[early_stopping])
 modelLSTM.save('modelLSTMv2.h5')
 
 modelGRU = Sequential()
 modelGRU.add(Embedding(total_words, 64, input_length=max_sequence_len-1))
 modelGRU.add(GRU(256))
-modelGRU.add(Dropout(0.2))
+modelGRU.add(BatchNormalization())
+modelGRU.add(Dropout(0.3))
 modelGRU.add(Dense(total_words, activation='softmax'))
-modelGRU.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+optimizer = Adam(learning_rate=0.0001, clipvalue=1.0)
+modelGRU.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-modelGRU.fit(X, y, epochs=100, verbose=1)
+early_stopping = EarlyStopping(monitor='loss', patience=5, restore_best_weights=True)
+modelGRU.fit(X, y, epochs=100, verbose=1, callbacks=[early_stopping])
 modelGRU.save('modelGRUv2.h5')
 
 class TransformerBlock(Model):
@@ -93,7 +101,6 @@ class TransformerBlock(Model):
 
     @classmethod
     def from_config(cls, config):
-        # Xóa 'trainable' khỏi **config để không bị truyền trùng lặp
         config.pop('trainable', None)
         return cls(
             embed_dim=config.get('embed_dim', 64),

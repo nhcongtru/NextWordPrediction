@@ -51,24 +51,12 @@ inputTextArea.addEventListener('input', async function () {
         document.querySelector('#predictionGRU').innerHTML = "<strong>GRU:</strong><br>";
 
         // Cập nhật các dự đoán cho Transformer
-        if (useNextWords) {
-            const predictions = result.prediction_tf;
-            predictions.forEach(prediction => {
-                const div = document.createElement('span');
-                div.className = 'prediction-text';
-                div.innerHTML = prediction; // Dự đoán
-                document.querySelector('#predictionTF').appendChild(div); // Thêm vào container
-            });
-        } else {
-            // Hiển thị dự đoán câu (nếu có)
-            const predictions = result.prediction_tf_phrases;
-            predictions.forEach(prediction => {
-                const div = document.createElement('span');
-                div.className = 'prediction-text';
-                div.innerHTML = prediction; // Dự đoán
-                document.querySelector('#predictionTF').appendChild(div); // Thêm vào container
-            });
-        }
+        result.prediction_tf.forEach(prediction => {
+            const div = document.createElement('span');
+            div.className = 'prediction-text';
+            div.innerHTML = prediction;
+            document.querySelector('#predictionTF').appendChild(div);
+        });
 
         // Cập nhật các dự đoán cho LSTM
         result.prediction_lstm.forEach(prediction => {
