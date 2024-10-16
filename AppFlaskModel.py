@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from ModelNextWordPrediction import TransformerBlock, predict_next_phrase, predict_next_words
 
 # Tải dữ liệu tokenizer
-with open('tokenizer.pkl', 'rb') as handle:
+with open('V4/tokenizer.pkl', 'rb') as handle:
     tokenizer = pickle.load(handle)
 
 total_words = len(tokenizer.word_index) + 1

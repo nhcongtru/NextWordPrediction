@@ -101,9 +101,9 @@ class TransformerBlock(Model):
         })
         return config
 
-embed_dim = 64
+embed_dim = 128
 num_heads = 8
-ff_dim = 256
+ff_dim = 512
 
 def build_model(total_words, max_sequence_len, embed_dim, num_heads, ff_dim):
     inputs = tf.keras.Input(shape=(max_sequence_len-1,))
@@ -111,15 +111,18 @@ def build_model(total_words, max_sequence_len, embed_dim, num_heads, ff_dim):
 
     transformer_block = TransformerBlock(embed_dim, num_heads, ff_dim)
     x = transformer_block(embedding_layer, training=True)
+    x = transformer_block(x, training=True)  # Thêm một lớp nữa
 
     x = GlobalAveragePooling1D()(x)
 
-    x = Dense(64, activation="relu")(x)
+    x = Dense(128, activation="relu")(x)
+    x = BatchNormalization()(x)
     x = Dropout(0.1)(x)
     outputs = Dense(total_words, activation="softmax")(x)
 
     modelTF = Model(inputs=inputs, outputs=outputs)
-    modelTF.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    optimizer = Adam(learning_rate=0.0005)
+    modelTF.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
     return modelTF
 
 modelTF = build_model(total_words, max_sequence_len, embed_dim, num_heads, ff_dim)
